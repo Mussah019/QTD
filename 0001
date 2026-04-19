@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Espace Personnel</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #0f0f0f;
+    color: white;
+}
+
+header {
+    background: #1a1a1a;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 2px solid #00ff99;
+}
+
+h1 {
+    color: #00ff99;
+}
+
+.container {
+    padding: 20px;
+}
+
+.section {
+    background: #1c1c1c;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
+textarea, input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: #111;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 5px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px;
+    background: #00ff99;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #00cc77;
+}
+
+.item {
+    background: #111;
+    padding: 10px;
+    margin-top: 10px;
+    border-left: 3px solid #00ff99;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>📱 Mon Espace Personnel</h1>
+</header>
+
+<div class="container">
+
+    <!-- EMPLOI DU TEMPS -->
+    <div class="section">
+        <h2>📅 Emploi du temps</h2>
+        <input id="taskInput" placeholder="Ex: Lundi 8h - école">
+        <button onclick="addTask()">Ajouter</button>
+        <div id="tasks"></div>
+    </div>
+
+    <!-- IDÉES -->
+    <div class="section">
+        <h2>💡 Idées</h2>
+        <textarea id="ideaInput" placeholder="Écris tes idées ici..."></textarea>
+        <button onclick="saveIdea()">Sauvegarder idée</button>
+        <div id="ideas"></div>
+    </div>
+
+</div>
+
+<script>
+// ====== EMPLOI DU TEMPS ======
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+function addTask() {
+    let input = document.getElementById("taskInput");
+    if (input.value === "") return;
+
+    tasks.push(input.value);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    input.value = "";
+    renderTasks();
+}
+
+function renderTasks() {
+    let container = document.getElementById("tasks");
+    container.innerHTML = "";
+
+    tasks.forEach((t, i) => {
+        container.innerHTML += `
+            <div class="item">
+                ${t}
+                <button onclick="deleteTask(${i})">❌</button>
+            </div>
+        `;
+    });
+}
+
+function deleteTask(i) {
+    tasks.splice(i, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    renderTasks();
+}
+
+// ====== IDÉES ======
+let ideas = JSON.parse(localStorage.getItem("ideas")) || [];
+
+function saveIdea() {
+    let input = document.getElementById("ideaInput");
+    if (input.value === "") return;
+
+    ideas.push(input.value);
+    localStorage.setItem("ideas", JSON.stringify(ideas));
+    input.value = "";
+    renderIdeas();
+}
+
+function renderIdeas() {
+    let container = document.getElementById("ideas");
+    container.innerHTML = "";
+
+    ideas.forEach((i, index) => {
+        container.innerHTML += `
+            <div class="item">
+                ${i}
+                <button onclick="deleteIdea(${index})">❌</button>
+            </div>
+        `;
+    });
+}
+
+function deleteIdea(i) {
+    ideas.splice(i, 1);
+    localStorage.setItem("ideas", JSON.stringify(ideas));
+    renderIdeas();
+}
+
+// ====== INIT ======
+renderTasks();
+renderIdeas();
+</script>
+
+</body>
+</html>
